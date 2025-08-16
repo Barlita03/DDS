@@ -1,5 +1,5 @@
-const { Alojamiento, Reserva, Categoria, DescuentoFijo, DescuentoPorNoches, DescuentoPorcentaje } = require("./domain.js");
-const { aumentarPrecioDiario, alojamientoMasCaro, filtrarPorPrecio, obtenerTotalReservas } = require("./funciones.js");
+const { Alojamiento, Reserva, Categoria, DescuentoFijo, DescuentoPorNoches, DescuentoPorcentaje, Caracteristica } = require("./domain.js");
+const { aumentarPrecioDiario, alojamientoMasCaro, filtrarPorPrecio, obtenerTotalReservas, filtrarPorCaracteristicas } = require("./funciones.js");
 
 // Instancias de alojamiento
 
@@ -84,3 +84,12 @@ console.log(`Precio total de la reserva 1: $${reserva1.precioFinal()}`);
 console.log(`Precio total de la reserva 2: $${reserva2.precioFinal()}`);
 console.log(`Precio total de la reserva 3: $${reserva3.precioFinal()}`);
 console.log(`Precio total de las reservas: $${obtenerTotalReservas([reserva1, reserva2, reserva3])}`);
+
+console.log("\n");
+
+alojamiento1.agregarCaracteristica(Caracteristica.Wifi);
+alojamiento2.agregarCaracteristica(Caracteristica.Wifi);
+alojamiento2.agregarCaracteristica(Caracteristica.Pileta);
+
+console.log(filtrarPorCaracteristicas([alojamiento1, alojamiento2, alojamiento3], [Caracteristica.Wifi]));
+console.log(filtrarPorCaracteristicas([alojamiento1, alojamiento2, alojamiento3], [Caracteristica.Pileta]));

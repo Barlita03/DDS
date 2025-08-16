@@ -10,16 +10,29 @@ const Categoria = Object.freeze(
     }
 );
 
+const Caracteristica = Object.freeze(
+    {
+        Wifi: "Wifi",
+        AptoParaMascotas: "AptoParaMascotas",
+        Pileta: "Pileta"
+    }
+);
+
 class Alojamiento {
     constructor(nombre, precioPorNoche, categoria) {
         this.nombre = nombre;
         this.precioPorNoche = precioPorNoche;
         this.categoria = categoria;
         this.reservas = [];
+        this.caracteristicas = [];
     }
 
     agregarReserva(reserva) {
         this.reservas.push(reserva);
+    }
+
+    agregarCaracteristica(caracteristica) {
+        this.caracteristicas.push(caracteristica);
     }
 
     estaReservado(fechaInicio, fechaFin) {
@@ -138,4 +151,4 @@ class DescuentoPorNoches {
 
 // --- EXPORTS ---
 
-module.exports = { Alojamiento, Reserva, Categoria, DescuentoFijo, DescuentoPorcentaje, DescuentoPorNoches };
+module.exports = { Alojamiento, Reserva, Categoria, DescuentoFijo, DescuentoPorcentaje, DescuentoPorNoches, Caracteristica };
