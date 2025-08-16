@@ -15,6 +15,20 @@ class Alojamiento {
         this.nombre = nombre;
         this.precioPorNoche = precioPorNoche;
         this.categoria = categoria;
+        this.reservas = [];
+    }
+
+    agregarReserva(reserva) {
+        this.reservas.push(reserva);
+    }
+
+    estaReservado(fechaInicio, fechaFin) {
+        for (const reserva of this.reservas) {
+            if (fechaInicio < reserva.diaFin && fechaFin > reserva.diaInicio) {
+                return true;
+            }
+        }
+        return false;
     }
 
     getDescripcion() {
@@ -26,14 +40,28 @@ class Alojamiento {
 
 class Reserva {
     constructor(alojamiento, diaInicio, diaFin) {
-        if (!diaInicio instanceof Date || !diaFin instanceof Date) {
-            throw new Error("diaInicio y diaFin deben ser una instancia de Date");
-        }
+        this.verificarFecha(diaInicio);
+        this.verificarFecha(diaFin);
+        this.verificarEstaReservado(alojamiento, diaInicio, diaFin);
 
         this.alojamiento = alojamiento;
         this.diaInicio = diaInicio;
         this.diaFin = diaFin;
         this.descuentos = [];
+
+        alojamiento.agregarReserva(this);
+    }
+
+    verificarEstaReservado(alojamiento, diaInicio, diaFin) {
+        if (alojamiento.estaReservado(diaInicio, diaFin)) {
+            throw new Error("El alojamiento se encuentra reservado en la fecha seleccionada");
+        }
+    }
+
+    verificarFecha(fecha) {
+        if (!fecha instanceof Date) {
+            throw new Error("diaInicio y diaFin deben ser una instancia de Date");
+        }
     }
 
     cantidadDeNoches() {

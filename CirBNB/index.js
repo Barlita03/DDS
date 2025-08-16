@@ -28,7 +28,18 @@ const reserva3 = new Reserva(alojamiento3, new Date("2023-10-01"), new Date("202
 console.log(`Cantidad de noches: ${reserva3.cantidadDeNoches()}`);
 console.log(`Precio base: $${reserva3.precioBase()}`);
 
+// Si un alojamiento esta reservado en esa fecha no me deja reservarlo
+try {
+    const reserva4 = new Reserva(alojamiento1, new Date("2023-10-04"), new Date("2023-10-08"));
+    console.log(`Cantidad de noches: ${reserva4.cantidadDeNoches()}`);
+    console.log(`Precio base: $${reserva4.precioBase()}`);
+} catch (e) {
+    console.error("error: " + e.message);
+}
+
 // Testeo los descuentos
+
+console.log("\n");
 
 const descuentoFijo = new DescuentoFijo(100);
 reserva1.agregarDescuento(descuentoFijo);
