@@ -1,4 +1,6 @@
-const {
+import chalk from "chalk";
+import figlet from "figlet";
+import {
   Alojamiento,
   Reserva,
   Categoria,
@@ -6,14 +8,14 @@ const {
   DescuentoPorNoches,
   DescuentoPorcentaje,
   Caracteristica,
-} = require("./domain.js");
-const {
+} from "./domain.js";
+import {
   aumentarPrecioDiario,
   alojamientoMasCaro,
   filtrarPorPrecio,
   obtenerTotalReservas,
   filtrarPorCaracteristicas,
-} = require("./funciones.js");
+} from "./funciones.js";
 
 // Instancias de alojamiento
 
@@ -147,3 +149,18 @@ console.log(
     [Caracteristica.Pileta]
   )
 );
+
+// Figlet
+
+figlet("Bienvenido a CirBNB", function (err, data) {
+  if (err) {
+    console.log("Something went wrong...");
+    console.dir(err);
+    return;
+  }
+  console.log(data);
+});
+
+// Chalk
+
+console.log(chalk.blue("Gracias por usar nuestra app!"));

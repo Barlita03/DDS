@@ -1,20 +1,20 @@
 // --- ALOJAMIENTO ---
 
 // Una forma de escribir un "falso enum"
-const Categoria = Object.freeze({
+export const Categoria = Object.freeze({
   Hotel: "Hotel",
   Departamento: "Departamento",
   Cabaña: "Cabaña",
   Apart: "Apart",
 });
 
-const Caracteristica = Object.freeze({
+export const Caracteristica = Object.freeze({
   Wifi: "Wifi",
   AptoParaMascotas: "AptoParaMascotas",
   Pileta: "Pileta",
 });
 
-class Alojamiento {
+export class Alojamiento {
   constructor(nombre, precioPorNoche, categoria) {
     this.nombre = nombre;
     this.precioPorNoche = precioPorNoche;
@@ -46,7 +46,7 @@ class Alojamiento {
 
 // --- RESERVA ---
 
-class Reserva {
+export class Reserva {
   constructor(alojamiento, diaInicio, diaFin) {
     this.verificarFecha(diaInicio);
     this.verificarFecha(diaFin);
@@ -111,7 +111,7 @@ class Reserva {
 
 // --- DESCUENTOS ---
 
-class DescuentoFijo {
+export class DescuentoFijo {
   constructor(valorFijo) {
     this.valorFijo = valorFijo;
   }
@@ -121,7 +121,7 @@ class DescuentoFijo {
   }
 }
 
-class DescuentoPorcentaje {
+export class DescuentoPorcentaje {
   constructor(porcentaje) {
     this.porcentaje = porcentaje;
   }
@@ -131,7 +131,7 @@ class DescuentoPorcentaje {
   }
 }
 
-class DescuentoPorNoches {
+export class DescuentoPorNoches {
   constructor(cantidadMinima, porcentaje) {
     this.cantidadMinima = cantidadMinima;
     this.porcentaje = porcentaje;
@@ -148,15 +148,3 @@ class DescuentoPorNoches {
     return valorDescontado;
   }
 }
-
-// --- EXPORTS ---
-
-module.exports = {
-  Alojamiento,
-  Reserva,
-  Categoria,
-  DescuentoFijo,
-  DescuentoPorcentaje,
-  DescuentoPorNoches,
-  Caracteristica,
-};
