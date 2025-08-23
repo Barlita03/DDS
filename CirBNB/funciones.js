@@ -11,7 +11,7 @@ export function alojamientoMasCaro(alojamientos) {
 
   const precioMaximo = Math.max(...listaDePrecios);
   const alojamiento = alojamientos.find(
-    (a) => a.precioPorNoche === precioMaximo
+    (a) => a.precioPorNoche === precioMaximo,
   );
 
   return alojamiento;
@@ -30,6 +30,6 @@ export function obtenerTotalReservas(reservas) {
 
 export function filtrarPorCaracteristicas(alojamientos, caracteristicas) {
   return alojamientos.filter((a) =>
-    caracteristicas.every((c) => a.caracteristicas.includes(c))
+    caracteristicas.every((c) => a.caracteristicas.includes(c)),
   );
 }

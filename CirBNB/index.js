@@ -22,7 +22,7 @@ import {
 const alojamiento1 = new Alojamiento(
   "Hotel en Buenos Aires",
   100,
-  Categoria.Hotel
+  Categoria.Hotel,
 );
 console.log(alojamiento1.getDescripcion()); // "Hotel en Buenos Aires (Hotel) - $100"
 
@@ -39,7 +39,7 @@ console.log("\n");
 const reserva1 = new Reserva(
   alojamiento1,
   new Date("2023-10-01"),
-  new Date("2023-10-05")
+  new Date("2023-10-05"),
 );
 console.log(`Cantidad de noches: ${reserva1.cantidadDeNoches()}`);
 console.log(`Precio base: $${reserva1.precioBase()}`);
@@ -47,7 +47,7 @@ console.log(`Precio base: $${reserva1.precioBase()}`);
 const reserva2 = new Reserva(
   alojamiento2,
   new Date("2023-10-01"),
-  new Date("2023-10-05")
+  new Date("2023-10-05"),
 );
 console.log(`Cantidad de noches: ${reserva2.cantidadDeNoches()}`);
 console.log(`Precio base: $${reserva2.precioBase()}`);
@@ -55,7 +55,7 @@ console.log(`Precio base: $${reserva2.precioBase()}`);
 const reserva3 = new Reserva(
   alojamiento3,
   new Date("2023-10-01"),
-  new Date("2023-10-05")
+  new Date("2023-10-05"),
 );
 console.log(`Cantidad de noches: ${reserva3.cantidadDeNoches()}`);
 console.log(`Precio base: $${reserva3.precioBase()}`);
@@ -65,7 +65,7 @@ try {
   const reserva4 = new Reserva(
     alojamiento1,
     new Date("2023-10-04"),
-    new Date("2023-10-08")
+    new Date("2023-10-08"),
   );
   console.log(`Cantidad de noches: ${reserva4.cantidadDeNoches()}`);
   console.log(`Precio base: $${reserva4.precioBase()}`);
@@ -81,7 +81,7 @@ const descuentoFijo = new DescuentoFijo(100);
 reserva1.agregarDescuento(descuentoFijo);
 
 console.log(
-  `Precio final con descuento fijo de $100: $${reserva1.precioFinal()}`
+  `Precio final con descuento fijo de $100: $${reserva1.precioFinal()}`,
 );
 
 reserva1.sacarDescuento(descuentoFijo);
@@ -97,7 +97,7 @@ let descuentoPorNoches = new DescuentoPorNoches(2, 25);
 reserva1.agregarDescuento(descuentoPorNoches);
 
 console.log(
-  `Precio final con descuento del 25% por 3 noches: $${reserva1.precioFinal()}`
+  `Precio final con descuento del 25% por 3 noches: $${reserva1.precioFinal()}`,
 );
 
 console.log("\n");
@@ -128,7 +128,7 @@ console.log(
     reserva1,
     reserva2,
     reserva3,
-  ])}`
+  ])}`,
 );
 
 console.log("\n");
@@ -140,14 +140,14 @@ alojamiento2.agregarCaracteristica(Caracteristica.Pileta);
 console.log(
   filtrarPorCaracteristicas(
     [alojamiento1, alojamiento2, alojamiento3],
-    [Caracteristica.Wifi]
-  )
+    [Caracteristica.Wifi],
+  ),
 );
 console.log(
   filtrarPorCaracteristicas(
     [alojamiento1, alojamiento2, alojamiento3],
-    [Caracteristica.Pileta]
-  )
+    [Caracteristica.Pileta],
+  ),
 );
 
 // Figlet
