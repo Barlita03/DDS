@@ -1,0 +1,4 @@
+{
+  // Muestra los warnings de ESLint en el editor
+  "eslint.showWarning": true
+}
