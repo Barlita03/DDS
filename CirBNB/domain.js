@@ -28,16 +28,15 @@ class Alojamiento {
   }
 
   agregarCaracteristica(caracteristica) {
-    this.caracteristicas.push(caracteristica);
+    if (!this.caracteristicas.includes(caracteristica)) {
+      this.caracteristicas.push(caracteristica);
+    }
   }
 
   estaReservado(fechaInicio, fechaFin) {
-    for (const reserva of this.reservas) {
-      if (fechaInicio < reserva.diaFin && fechaFin > reserva.diaInicio) {
-        return true;
-      }
-    }
-    return false;
+    return this.reservas.some(
+      (reserva) => fechaInicio < reserva.diaFin && fechaFin > reserva.diaInicio
+    );
   }
 
   getDescripcion() {
@@ -70,7 +69,7 @@ class Reserva {
   }
 
   verificarFecha(fecha) {
-    if (!fecha instanceof Date) {
+    if (!(fecha instanceof Date)) {
       throw new Error("diaInicio y diaFin deben ser una instancia de Date");
     }
   }
