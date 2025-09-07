@@ -16,13 +16,15 @@ import {
   obtenerTotalReservas,
   filtrarPorCaracteristicas,
 } from "./funciones.js";
+import express from "express";
+import { z } from "zod";
 
 // Instancias de alojamiento
 
 const alojamiento1 = new Alojamiento(
   "Hotel en Buenos Aires",
   100,
-  Categoria.Hotel,
+  Categoria.Hotel
 );
 console.log(alojamiento1.getDescripcion()); // "Hotel en Buenos Aires (Hotel) - $100"
 
@@ -39,7 +41,7 @@ console.log("\n");
 const reserva1 = new Reserva(
   alojamiento1,
   new Date("2023-10-01"),
-  new Date("2023-10-05"),
+  new Date("2023-10-05")
 );
 console.log(`Cantidad de noches: ${reserva1.cantidadDeNoches()}`);
 console.log(`Precio base: $${reserva1.precioBase()}`);
@@ -47,7 +49,7 @@ console.log(`Precio base: $${reserva1.precioBase()}`);
 const reserva2 = new Reserva(
   alojamiento2,
   new Date("2023-10-01"),
-  new Date("2023-10-05"),
+  new Date("2023-10-05")
 );
 console.log(`Cantidad de noches: ${reserva2.cantidadDeNoches()}`);
 console.log(`Precio base: $${reserva2.precioBase()}`);
@@ -55,7 +57,7 @@ console.log(`Precio base: $${reserva2.precioBase()}`);
 const reserva3 = new Reserva(
   alojamiento3,
   new Date("2023-10-01"),
-  new Date("2023-10-05"),
+  new Date("2023-10-05")
 );
 console.log(`Cantidad de noches: ${reserva3.cantidadDeNoches()}`);
 console.log(`Precio base: $${reserva3.precioBase()}`);
@@ -65,7 +67,7 @@ try {
   const reserva4 = new Reserva(
     alojamiento1,
     new Date("2023-10-04"),
-    new Date("2023-10-08"),
+    new Date("2023-10-08")
   );
   console.log(`Cantidad de noches: ${reserva4.cantidadDeNoches()}`);
   console.log(`Precio base: $${reserva4.precioBase()}`);
@@ -81,7 +83,7 @@ const descuentoFijo = new DescuentoFijo(100);
 reserva1.agregarDescuento(descuentoFijo);
 
 console.log(
-  `Precio final con descuento fijo de $100: $${reserva1.precioFinal()}`,
+  `Precio final con descuento fijo de $100: $${reserva1.precioFinal()}`
 );
 
 reserva1.sacarDescuento(descuentoFijo);
@@ -97,7 +99,7 @@ let descuentoPorNoches = new DescuentoPorNoches(2, 25);
 reserva1.agregarDescuento(descuentoPorNoches);
 
 console.log(
-  `Precio final con descuento del 25% por 3 noches: $${reserva1.precioFinal()}`,
+  `Precio final con descuento del 25% por 3 noches: $${reserva1.precioFinal()}`
 );
 
 console.log("\n");
@@ -128,7 +130,7 @@ console.log(
     reserva1,
     reserva2,
     reserva3,
-  ])}`,
+  ])}`
 );
 
 console.log("\n");
@@ -140,14 +142,14 @@ alojamiento2.agregarCaracteristica(Caracteristica.Pileta);
 console.log(
   filtrarPorCaracteristicas(
     [alojamiento1, alojamiento2, alojamiento3],
-    [Caracteristica.Wifi],
-  ),
+    [Caracteristica.Wifi]
+  )
 );
 console.log(
   filtrarPorCaracteristicas(
     [alojamiento1, alojamiento2, alojamiento3],
-    [Caracteristica.Pileta],
-  ),
+    [Caracteristica.Pileta]
+  )
 );
 
 // Figlet
@@ -164,3 +166,125 @@ figlet("Bienvenido a CirBNB", function (err, data) {
 // Chalk
 
 console.log(chalk.blue("Gracias por usar nuestra app!"));
+
+// API
+
+const app = express();
+
+app.use(express.json());
+
+app.get("/health", (req, res) => {
+  res.send("ok");
+});
+
+const alojamientos = [alojamiento1, alojamiento2, alojamiento3];
+
+function alojamientoADTO(alojamiento) {
+  return {
+    nombre: alojamiento.nombre,
+    precioPorNoche: alojamiento.precioPorNoche,
+    categoria: alojamiento.categoria,
+    caracteristicas: alojamiento.caracteristicas,
+    reservas: alojamiento.reservas.map((reserva) => ({
+      diaInicio: reserva.diaInicio,
+      diaFin: reserva.diaFin,
+    })),
+  };
+}
+
+app.get("/api/v1/alojamientos", (req, res) => {
+  const max_price = req.query.max_price;
+
+  if (!max_price) {
+    res.json(alojamientos.map(alojamientoADTO));
+  }
+
+  res.json(
+    alojamientos
+      .filter((a) => a.precioPorNoche <= parseFloat(max_price))
+      .map(alojamientoADTO)
+  );
+});
+
+app.get("/api/v1/alojamientos/:nombre", (req, res) => {
+  const nombre = req.params.nombre;
+  const alojamiento = alojamientos.find((a) => a.nombre === nombre);
+
+  if (!alojamiento) {
+    res.status(404).send("Alojamiento no encontrado");
+    return;
+  }
+
+  res.json(alojamientoADTO(alojamiento));
+});
+
+app.post("/api/v1/alojamientos", express.json(), (req, res) => {
+  const body = req.body;
+  const resultBody = alogamientoSchema.safeParse(body);
+
+  if (resultBody.error) {
+    res.status(400).json(resultBody.error.issues);
+    return;
+  }
+
+  const nuevoAlojamientoDTO = resultBody.data;
+  const nuevoAlojamiento = new Alojamiento(
+    nuevoAlojamientoDTO.nombre,
+    nuevoAlojamientoDTO.precioPorNoche,
+    nuevoAlojamientoDTO.categoria
+  );
+  alojamientos.push(nuevoAlojamiento);
+
+  res.status(201).json(alojamientoADTO(nuevoAlojamiento));
+});
+
+app.delete("/api/v1/alojamientos/:nombre", (req, res) => {
+  const nombre = req.params.nombre;
+  const index = alojamientos.findIndex((a) => a.nombre === nombre);
+
+  if (index === -1) {
+    res.status(404).send("Alojamiento no encontrado");
+    return;
+  }
+
+  alojamientos.splice(index, 1);
+  res.status(204).send();
+});
+
+app.put("/api/v1/alojamientos/:nombre", (req, res) => {
+  const body = req.body;
+  const resultBody = alogamientoSchema.safeParse(body);
+
+  if (resultBody.error) {
+    res.status(400).json(resultBody.error.issues);
+    return;
+  }
+
+  const alojamientoActualizadoDTO = resultBody.data;
+  const alojamientoExistente = alojamientos.find(
+    (a) => a.nombre === req.params.nombre
+  );
+
+  if (!alojamientoExistente) {
+    res.status(404).send("Alojamiento no encontrado");
+    return;
+  }
+
+  alojamientoExistente.nombre = alojamientoActualizadoDTO.nombre;
+  alojamientoExistente.precioPorNoche =
+    alojamientoActualizadoDTO.precioPorNoche;
+  alojamientoExistente.categoria = alojamientoActualizadoDTO.categoria;
+
+  res.json(alojamientoADTO(alojamientoExistente));
+});
+
+app.listen(3000, () => {
+  console.log("Server started on port 3000");
+});
+
+const alogamientoSchema = z.object({
+  nombre: z.string().min(3).max(20),
+  precioPorNoche: z.number().positive(),
+  categoria: z.string(),
+  caracteristicas: z.array(z.enum(Object.values(Caracteristica))).optional(),
+});
