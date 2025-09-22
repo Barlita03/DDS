@@ -2,16 +2,21 @@ import {
   filtrarPorPrecio,
   filtrarPorCaracteristicas,
 } from "../functions/funciones.js";
+import fs from "node:fs/promises";
+import path from "node:path";
+import { map } from "zod";
+// import Alojamiento from "../entities/alojamientos/alojamiento.js";
 
 export default class AlojamientoRepository {
-  constructor() {
-    this.alojamientos = [];
-    this.nextId = 1;
-  }
+  static alojamientoPath = path.join("data", "alojamientos.json");
 
-  findAll(filtros = {}) {
+  async findAll(filtros = {}) {
     const { maxPrice, caracteristics } = filtros;
-    let alojamientosADevolver = this.alojamientos;
+
+    const data = await fs.readFile(AlojamientoRepository.alojamientoPath);
+    const dataObjects = await JSON.parse(data);
+
+    let alojamientosADevolver = mapToAlojamientos(dataObjects);
 
     if (maxPrice) {
       alojamientosADevolver = filtrarPorPrecio(alojamientosADevolver, maxPrice);
@@ -29,7 +34,7 @@ export default class AlojamientoRepository {
     return alojamientosADevolver;
   }
 
-  findByPage(numeroPagina, elementosPorPagina, filtros) {
+  async findByPage(numeroPagina, elementosPorPagina, filtros) {
     const offset = (numeroPagina - 1) * elementosPorPagina;
     const alojamientos = this.findAll(filtros);
 
@@ -48,9 +53,14 @@ export default class AlojamientoRepository {
     return alojamiento;
   }
 
-  save(alojamiento) {
-    alojamiento.id = this.nextId++;
+  async save(alojamiento) {
+    const alojamientos = await this.findAll();
+    alojamiento.id = alojamientos.length + 1;
     this.alojamientos.push(alojamiento);
+    await fs.writeFile(
+      AlojamientoRepository.alojamientoPath,
+      JSON.stringify(this.alojamientos, null, 2)
+    );
 
     return alojamiento;
   }
@@ -87,11 +97,17 @@ export default class AlojamientoRepository {
     return alojamientoActualizado;
   }
 
-  countAll() {
-    return this.alojamientos.length;
+  async countAll() {
+    const alojamientos = await this.findAll();
+    return alojamientos.length;
   }
 
   addReservation(alojamiento, reserva) {
     alojamiento.reservas.push(reserva);
   }
+}
+
+// TODO: Terminar
+function mapToAlojamientos(dataObject) {
+  const { nombre, categoria, precioPorNoche } = dataObject;
 }

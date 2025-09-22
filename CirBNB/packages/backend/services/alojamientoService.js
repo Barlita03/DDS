@@ -5,11 +5,11 @@ export default class AlojamientoService {
     this.alojamientoRepository = alojamientoRepository;
   }
 
-  findAll(page = 1, limit = 10, filtros = {}) {
+  async findAll(page = 1, limit = 10, filtros = {}) {
     const numeroPagina = Math.max(Number(page), 1);
     const elementosPorPagina = Math.min(Math.max(Number(limit), 1), 100);
 
-    const alojamientos = this.alojamientoRepository.findByPage(
+    const alojamientos = await this.alojamientoRepository.findByPage(
       numeroPagina,
       elementosPorPagina,
       filtros
@@ -27,7 +27,7 @@ export default class AlojamientoService {
     };
   }
 
-  create(nuevoAlojamientoJSON) {
+  async create(nuevoAlojamientoJSON) {
     const nuevoAlojamiento = new Alojamiento(
       nuevoAlojamientoJSON.nombre,
       nuevoAlojamientoJSON.precioPorNoche,
@@ -36,7 +36,7 @@ export default class AlojamientoService {
     );
 
     const alojamientoGuardado =
-      this.alojamientoRepository.save(nuevoAlojamiento);
+      await this.alojamientoRepository.save(nuevoAlojamiento);
 
     return alojamientoGuardado;
   }

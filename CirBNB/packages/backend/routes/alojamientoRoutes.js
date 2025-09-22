@@ -1,3 +1,4 @@
+import { ca } from "zod/locales";
 import AlojamientoController from "../controllers/alojamientoController.js";
 import express from "express";
 
@@ -6,8 +7,12 @@ const pathAlojamientos = "/alojamiento";
 export default function alojamientoRoutes(getController) {
   const router = express.Router();
 
-  router.get(pathAlojamientos, (req, res) => {
-    getController(AlojamientoController).findAll(req, res);
+  router.get(pathAlojamientos, async (req, res) => {
+    try {
+      await getController(AlojamientoController).findAll(req, res);
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
   });
 
   router.post(pathAlojamientos, (req, res) => {

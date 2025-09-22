@@ -5,11 +5,11 @@ export default class AlojamientoController {
     this.alojamientoService = alojamientoService;
   }
 
-  findAll(req, res) {
+  async findAll(req, res) {
     const { page = 1, limit = 10 } = req.query;
     const filtros = req.query;
 
-    const alojamientosPaginados = this.alojamientoService.findAll(
+    const alojamientosPaginados = await this.alojamientoService.findAll(
       page,
       limit,
       filtros
