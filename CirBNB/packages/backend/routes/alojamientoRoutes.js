@@ -1,35 +1,48 @@
-import { ca } from "zod/locales";
+import alojamientosErrorHandler from "../middlewares/alojamientoMiddleware.js";
 import AlojamientoController from "../controllers/alojamientoController.js";
+import loggerMiddleware from "../middlewares/loggerMiddleware.js";
 import express from "express";
 
-const pathAlojamientos = "/alojamiento";
+const pathAlojamiento = "/alojamiento";
 
 export default function alojamientoRoutes(getController) {
   const router = express.Router();
 
-  router.get(pathAlojamientos, async (req, res) => {
+  router.use(loggerMiddleware);
+
+  router.get(pathAlojamiento, async (req, res) => {
     try {
-      await getController(AlojamientoController).findAll(req, res);
-    } catch (error) {
-      res.status(500).json({ error: error.message });
+      await getController(AlojamientoController).buscarTodos(req, res);
+    } catch (err) {
+      //usamos el error
     }
   });
 
-  router.post(pathAlojamientos, (req, res) => {
-    getController(AlojamientoController).create(req, res);
+  router.post(pathAlojamiento, async (req, res, next) => {
+    try {
+      await getController(AlojamientoController).crear(req, res);
+    } catch (err) {
+      next(err);
+    }
   });
 
-  router.get(pathAlojamientos + "/:id", (req, res) => {
-    getController(AlojamientoController).findById(req, res);
+  router.get(pathAlojamiento + "/:id", async (req, res, next) => {
+    try {
+      await getController(AlojamientoController).findById(req, res);
+    } catch (err) {
+      next(err);
+    }
   });
 
-  router.delete(pathAlojamientos + "/:id", (req, res) => {
-    getController(AlojamientoController).delete(req, res);
+  router.delete(pathAlojamiento + "/:id", (req, res) => {
+    getController(AlojamientoController).eliminar(req, res);
   });
 
-  router.put(pathAlojamientos + "/:id", (req, res) => {
-    getController(AlojamientoController).update(req, res);
+  router.put(pathAlojamiento + "/:id", (req, res) => {
+    getController(AlojamientoController).actualizar(req, res);
   });
+
+  router.use(alojamientosErrorHandler);
 
   return router;
 }

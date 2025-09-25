@@ -5,61 +5,62 @@ export default class AlojamientoService {
     this.alojamientoRepository = alojamientoRepository;
   }
 
-  async findAll(page = 1, limit = 10, filtros = {}) {
+  async buscarTodos(page, limit, filtros) {
     const numeroPagina = Math.max(Number(page), 1);
-    const elementosPorPagina = Math.min(Math.max(Number(limit), 1), 100);
+    const elementosXPagina = Math.min(Math.max(Number(limit), 1), 100);
 
     const alojamientos = await this.alojamientoRepository.findByPage(
       numeroPagina,
-      elementosPorPagina,
+      elementosXPagina,
       filtros
     );
 
-    const total = this.alojamientoRepository.countAll();
-    const totalPaginas = Math.ceil(total / elementosPorPagina);
+    const total = await this.alojamientoRepository.contarTodos();
+    const totalPaginas = Math.ceil(total / elementosXPagina);
 
     return {
-      page: numeroPagina,
-      limit: elementosPorPagina,
-      total,
-      totalPaginas,
+      pagina: numeroPagina,
+      perPage: elementosXPagina,
+      total: total,
+      totalPaginas: totalPaginas,
       data: alojamientos,
     };
   }
 
-  async create(nuevoAlojamientoJSON) {
+  async crear(nuevoAlojamientoJSON) {
     const nuevoAlojamiento = new Alojamiento(
       nuevoAlojamientoJSON.nombre,
       nuevoAlojamientoJSON.precioPorNoche,
-      nuevoAlojamientoJSON.categoria,
-      nuevoAlojamientoJSON.caracteristicas || []
+      nuevoAlojamientoJSON.categoria
     );
 
+    if (nuevoAlojamientoJSON.caracteristicas) {
+      for (const caracteristica of nuevoAlojamientoJSON.caracteristicas) {
+        nuevoAlojamiento.agregarCaracteristica(caracteristica);
+      }
+    }
+
     const alojamientoGuardado =
-      await this.alojamientoRepository.save(nuevoAlojamiento);
+      await this.alojamientoRepository.crear(nuevoAlojamiento);
 
     return alojamientoGuardado;
   }
 
-  findById(id) {
-    const alojamiento = this.alojamientoRepository.findById(id);
-
-    if (!alojamiento) {
-      throw new Error("Alojamiento no encontrado");
-    }
-
+  async findById(id) {
+    const alojamiento = await this.alojamientoRepository.findById(id);
     return alojamiento;
   }
 
-  delete(id) {
-    const alojamiento = this.alojamientoRepository.findById(id);
-
-    if (!alojamiento) {
-      throw new Error("Alojamiento no encontrado");
-    }
-
-    return alojamiento;
+  async eliminar(id) {
+    const alojamientoEliminado = await this.alojamientoRepository.eliminar(id);
+    return alojamientoEliminado;
   }
 
-  update(id, alojamientoActualizadoJSON) {}
+  async actualizar(id, alojamientoActualizadoJSON) {
+    const alojamientoGuardado = await this.alojamientoRepository.actualizar(
+      id,
+      alojamientoActualizadoJSON
+    );
+    return alojamientoGuardado;
+  }
 }

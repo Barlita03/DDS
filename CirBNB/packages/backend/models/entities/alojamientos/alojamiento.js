@@ -1,9 +1,9 @@
 export default class Alojamiento {
-  constructor(nombre, precioPorNoche, categoria, caracteristicas = []) {
+  constructor(nombre, precioPorNoche, categoria) {
     this.nombre = nombre;
     this.precioPorNoche = precioPorNoche;
     this.categoria = categoria;
-    this.caracteristicas = caracteristicas;
+    this.caracteristicas = [];
     this.reservas = [];
   }
 

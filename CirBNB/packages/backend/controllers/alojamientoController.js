@@ -1,44 +1,29 @@
 import { z } from "zod";
+import InvalidCategoriaError from "../errors/InvalidCategoria.js";
+import Categoria from "../models/entities/alojamientos/categoria.js";
+import AlojamientoDoesNotExist from "../errors/AlojamientoDoesNotExist.js";
 
 export default class AlojamientoController {
   constructor(alojamientoService) {
     this.alojamientoService = alojamientoService;
   }
 
-  async findAll(req, res) {
+  async buscarTodos(req, res) {
     const { page = 1, limit = 10 } = req.query;
     const filtros = req.query;
 
-    const alojamientosPaginados = await this.alojamientoService.findAll(
+    const alojamientosPaginados = await this.alojamientoService.buscarTodos(
       page,
       limit,
       filtros
     );
-
     if (alojamientosPaginados === null) {
-      res.status(204).send("No se encontraron alojamientos");
-      return;
+      return res.status(204).send();
     }
-
-    // Evitar referencias circulares: mapear a DTO plano (copilot)
-    const alojamientosDTO = alojamientosPaginados.data.map((a) => ({
-      nombre: a.nombre,
-      precioPorNoche: a.precioPorNoche,
-      categoria: a.categoria,
-      caracteristicas: a.caracteristicas,
-      reservas: a.reservas.map((r) => ({
-        diaInicio: r.diaInicio,
-        diaFin: r.diaFin,
-      })),
-    }));
-
-    res.status(200).json({
-      ...alojamientosPaginados,
-      data: alojamientosDTO,
-    });
+    res.status(200).json(alojamientosPaginados);
   }
 
-  create(req, res) {
+  async crear(req, res) {
     const body = req.body;
     const resultBody = alojamientoSchema.safeParse(body);
 
@@ -47,79 +32,98 @@ export default class AlojamientoController {
       return;
     }
 
-    const nuevoAlojamientoDTO = this.alojamientoService.create(resultBody.data);
-    res.status(201).json(nuevoAlojamientoDTO);
+    if (!Object.values(Categoria).includes(resultBody.data.categoria)) {
+      throw new InvalidCategoriaError(resultBody.data.categoria);
+    }
+
+    const nuevaAlojamiento = await this.alojamientoService.crear(
+      resultBody.data
+    );
+    res.status(201).json(nuevaAlojamiento);
   }
 
-  // findById(req, res) {
-  //   const resultId = idTransform.safeParse(req.params.id);
+  async findById(req, res) {
+    const resultId = idTransform.safeParse(req.params.id);
 
-  //   if (resultId.error) {
-  //     res.status(400).json(resultId.error.issues);
-  //     return;
-  //   }
+    if (resultId.error) {
+      res.status(400).json(resultId.error.issues);
+      return;
+    }
 
-  //   const id = resultId.data;
-  //   const alojamiento = this.alojamientoService.findById(id);
+    const id = resultId.data;
 
-  //   if (!alojamiento) {
-  //     res.status(404).error("Alojamiento no encontrado");
-  //     return;
-  //   }
+    const alojamiento = await this.alojamientoService.findById(id);
+    if (!alojamiento) {
+      throw new AlojamientoDoesNotExist(id);
+    }
+    res.status(200).json(alojamiento);
+  }
 
-  //   res.status(200).json(alojamiento);
-  // }
+  async eliminar(req, res) {
+    const resultId = idTransform.safeParse(req.params.id);
 
-  // delete(req, res) {
-  //   const resultId = idTransform.safeParse(req.params.id);
+    if (resultId.error) {
+      res.status(400).json(resultId.error.issues);
+      return;
+    }
 
-  //   if (resultId.error) {
-  //     res.status(400).json(resultId.error.issues);
-  //     return;
-  //   }
+    const id = resultId.data;
 
-  //   const id = resultId.data;
-  //   const alojamientoEliminado = this.alojamientoService.delete(id);
+    const alojamientoEliminado = await this.alojamientoService.eliminar(id);
+    if (!alojamientoEliminado) {
+      res.status(404).json({
+        error: "No existe el alojamiento que se intenta eliminar con ese ID.",
+      });
+      return;
+    }
 
-  //   if (!alojamientoEliminado) {
-  //     res.status(404).error("Alojamiento no encontrado");
-  //     return;
-  //   }
+    res.status(200).json(alojamientoEliminado);
+  }
 
-  //   res.status(200).json(alojamientoEliminado);
-  // }
+  async actualizar(req, res) {
+    const resultId = idTransform.safeParse(req.params.id);
 
-  // update(req, res) {
-  //   const resultId = idTransform.safeParse(req.params.id);
+    if (resultId.error) {
+      res.status(400).json(resultId.error.issues);
+      return;
+    }
 
-  //   if (resultId.error) {
-  //     res.status(400).json(resultId.error.issues);
-  //     return;
-  //   }
+    const id = resultId.data;
 
-  //   const id = resultId.data;
+    const body = req.body;
+    const resultBody = alojamientoSchema.safeParse(body);
 
-  //   const body = req.body;
-  //   const resultBody = alojamientoSchema.safeParse(body);
+    const alojamientoActualizado = await this.alojamientoService.actualizar(
+      id,
+      resultBody.data
+    );
 
-  //   if (resultBody.error) {
-  //     res.status(400).json(resultBody.error.issues);
-  //     return;
-  //   }
+    if (!alojamientoActualizado) {
+      res.status(404).json({
+        error: "No existe el alojamiento que se intenta eliminar con ese ID.",
+      });
+      return;
+    }
 
-  //   const alojamientoActualizadoDTO = resultBody.data;
-  //   const alojamientoActualizado = this.alojamientoService.update(
-  //     id,
-  //     alojamientoActualizadoDTO
-  //   );
-
-  //   res.status(200).json(alojamientoActualizado);
-  // }
+    res.json(alojamientoActualizado);
+  }
 }
+
+const idTransform = z.string().transform((val, ctx) => {
+  const num = Number(val);
+  if (isNaN(num)) {
+    ctx.addIssue({
+      code: "INVALID_ID",
+      message: "id must be a number",
+    });
+    return z.NEVER;
+  }
+  return num;
+});
 
 const alojamientoSchema = z.object({
   nombre: z.string().min(3).max(20),
   categoria: z.string(),
-  precioPorNoche: z.number().min(1),
+  precioPorNoche: z.number().nonnegative(),
   caracteristicas: z.array(z.string()).optional(),
 });

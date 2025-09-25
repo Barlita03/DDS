@@ -1,1 +1,10 @@
-[]
+[
+  {
+    "nombre": "Casa de Playa",
+    "precioPorNoche": 150,
+    "categoria": "Hotel",
+    "caracteristicas": ["Pileta", "WiFi"],
+    "reservas": [],
+    "id": 1
+  }
+]
