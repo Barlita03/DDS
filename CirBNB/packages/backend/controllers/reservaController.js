@@ -5,7 +5,7 @@ export default class ReservaController {
     this.reservaService = reservaService;
   }
 
-  create(req, res) {
+  async create(req, res) {
     const body = req.body;
     const resultBody = reservaSchema.safeParse(body);
 
@@ -14,12 +14,16 @@ export default class ReservaController {
       return;
     }
 
-    const nuevaReservaDTO = this.reservaService.create(resultBody.data);
-    res.status(201).json({
-      alojamiento: nuevaReservaDTO.alojamiento.nombre,
-      diaInicio: nuevaReservaDTO.diaInicio,
-      diaFin: nuevaReservaDTO.diaFin,
-    });
+    try {
+      const nuevaReservaDTO = await this.reservaService.create(resultBody.data);
+      res.status(201).json({
+        alojamiento: nuevaReservaDTO.alojamiento.nombre,
+        diaInicio: nuevaReservaDTO.diaInicio,
+        diaFin: nuevaReservaDTO.diaFin,
+      });
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
   }
 }
 

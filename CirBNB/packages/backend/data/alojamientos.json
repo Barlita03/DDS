@@ -1,10 +1,1 @@
-[
-  {
-    "nombre": "Casa de Playa",
-    "precioPorNoche": 150,
-    "categoria": "Hotel",
-    "caracteristicas": ["Pileta", "WiFi"],
-    "reservas": [],
-    "id": 1
-  }
-]
+[{"nombre":"Casa de Playa","precioPorNoche":150,"categoria":"Hotel","caracteristicas":[],"reservas":[],"id":1},{"nombre":"alojamiento1","precioPorNoche":150,"categoria":"Hotel","caracteristicas":[],"reservas":[{"diaInicio":"2025-10-01T00:00:00.000Z","diaFin":"2025-10-05T00:00:00.000Z","descuentos":[]}],"id":2},{"nombre":"alojamiento2","precioPorNoche":150,"categoria":"Hotel","caracteristicas":[],"reservas":[{"diaInicio":"2025-10-01T00:00:00.000Z","diaFin":"2025-10-05T00:00:00.000Z","descuentos":[]}],"id":3}]

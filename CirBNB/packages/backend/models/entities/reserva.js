@@ -1,3 +1,6 @@
+import InvalidDate from "../../errors/invalidDate.js";
+import InvalidReservation from "../../errors/InvalidReservation.js";
+
 export default class Reserva {
   constructor(alojamiento, diaInicio, diaFin) {
     this.verificarFecha(diaInicio);
@@ -12,15 +15,13 @@ export default class Reserva {
 
   verificarEstaReservado(alojamiento, diaInicio, diaFin) {
     if (alojamiento.estaReservado(diaInicio, diaFin)) {
-      throw new Error(
-        "El alojamiento se encuentra reservado en la fecha seleccionada"
-      );
+      throw new InvalidReservation();
     }
   }
 
   verificarFecha(fecha) {
     if (!(fecha instanceof Date)) {
-      throw new Error("diaInicio y diaFin deben ser una instancia de Date");
+      throw new InvalidDate();
     }
   }
 

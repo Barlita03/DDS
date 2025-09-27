@@ -1,12 +1,12 @@
-import Reserva from "../models/entities/Reserva.js";
+import Reserva from "../models/entities/reserva.js";
 
 export default class ReservaService {
   constructor(alojamientoRepository) {
     this.alojamientoRepository = alojamientoRepository;
   }
 
-  create(nuevaReservaJSON) {
-    const alojamiento = this.alojamientoRepository.findByName(
+  async create(nuevaReservaJSON) {
+    const alojamiento = await this.alojamientoRepository.buscarPorNombre(
       nuevaReservaJSON.alojamiento
     );
 
@@ -20,7 +20,7 @@ export default class ReservaService {
       nuevaReservaJSON.diaFin
     );
 
-    this.alojamientoRepository.addReservation(alojamiento, nuevaReserva);
+    this.alojamientoRepository.agregarReserva(alojamiento, nuevaReserva);
 
     return nuevaReserva;
   }
