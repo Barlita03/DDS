@@ -76,8 +76,44 @@
       </section>
 
       <div class="flex-row center-flex-row" id="contact-div">
-        <h4 class="font-family-barlow-blue">TERMINAR ACA</h4>
+        <h4 class="font-family-barlow-blue">CONTACTO</h4>
+        <form
+          action="your-url"
+          method="post"
+          id="contact-form"
+          class="flex-column"
+        >
+          <h5 class="font-family-barlow-blue">Envienos su consulta</h5>
+          <input type="text" placeholder="Nombre" />
+          <input type="email" placeholder="Email" required />
+          <input type="tel" placeholder="Teléfono de contacto" />
+
+          <select name="servicio" id="servicio" required>
+            <option value="" disable selected hidden class="select-placeholder">
+              Elija el servicio de su interés
+            </option>
+            <option value="autos0km">Autos 0km</option>
+            <option value="usados">Usados</option>
+            <option value="planAhorro">Plan de Ahorro</option>
+            <option value="seguros">Seguros</option>
+            <option value="servicioCarroceria">Servicio de Carrocería</option>
+            <option value="tallerRepuestos">Taller y Repuestos</option>
+            <option value="neumaticos">Neumáticos</option>
+          </select>
+
+          <textarea
+            name="message"
+            id="message"
+            placeholder="Escribanos su consulta"
+            class="font-family-barlow-blue"></textarea>
+
+          <button type="submit" class="btn">Enviar</button>
+        </form>
       </div>
     </main>
+    <footer>
+      <p>Todos los derechos reservados.</p>
+      <p>CarZero S.R.L</p>
+    </footer>
   </body>
 </html>
