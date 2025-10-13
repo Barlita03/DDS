@@ -3,12 +3,14 @@ import "../../index.css";
 import { FaShoppingCart } from "react-icons/fa";
 import { Link } from "react-router";
 
-export default function NavBar() {
+export default function NavBar({ onMenuClick }) {
   return (
     <section className="navbar-bg">
       <nav className="navbar">
         <div className="navbar-section left">
-          <button className="menu-icon">☰</button>
+          <button className="menu-icon" onClick={onMenuClick}>
+            ☰
+          </button>
         </div>
 
         <div className="navbar-section center">

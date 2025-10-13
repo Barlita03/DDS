@@ -3,7 +3,6 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Home from "./features/home/Home.jsx";
 import Layout from "./features/layout/Layout.jsx";
 import HotelDetailPage from "./features/hotels/HotelDetailPage.jsx";
-import SideBar from "./components/sideBar/sideBar.jsx";
 
 export default function App() {
   return (
