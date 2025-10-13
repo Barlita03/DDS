@@ -5,4 +5,5 @@
   color: var(--primary-white);
   background-color: var(--secondary-purple);
   height: 30px;
+  width: 100%;
 }
