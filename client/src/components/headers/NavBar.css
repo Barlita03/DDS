@@ -17,3 +17,7 @@
   margin: 0 0 0 1rem;
   color: var(--primary-white);
 }
+
+.brand-text:hover {
+  cursor: pointer;
+}

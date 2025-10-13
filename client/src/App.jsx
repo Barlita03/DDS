@@ -1,18 +1,19 @@
 import "bootstrap/dist/css/bootstrap.min.css";
-import Header from "./components/headers/Header.jsx";
-import NavBar from "./components/headers/NavBar.jsx";
-import AccomodationSearchBar from "./components/accomodationSearchBar/AccomodationSearchBar.jsx";
-import HotelCarousel from "./components/hotelCarousel/HotelCarousel.jsx";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import Home from "./features/home/Home.jsx";
+import Layout from "./features/layout/Layout.jsx";
+import HotelDetailPage from "./features/hotels/HotelDetailPage.jsx";
+import SideBar from "./components/sideBar/sideBar.jsx";
 
-function App() {
+export default function App() {
   return (
-    <>
-      <Header nombre="Nicolás"></Header>
-      <NavBar></NavBar>
-      <AccomodationSearchBar></AccomodationSearchBar>
-      <HotelCarousel></HotelCarousel>
-    </>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Layout />}>
+          <Route index element={<Home />} />
+          <Route path="/hotels/:id" element={<HotelDetailPage />} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
   );
 }
-
-export default App;

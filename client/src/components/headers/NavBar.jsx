@@ -1,6 +1,7 @@
 import "./NavBar.css";
 import "../../index.css";
 import { FaShoppingCart } from "react-icons/fa";
+import { Link } from "react-router";
 
 export default function NavBar() {
   return (
@@ -11,7 +12,11 @@ export default function NavBar() {
         </div>
 
         <div className="navbar-section center">
-          <h1 className="brand-text">Cirbnb.com</h1>
+          <div>
+            <Link to={"/"} className="link-no-style">
+              <h1 className="brand-text">Cirbnb.com</h1>
+            </Link>
+          </div>
         </div>
 
         <div className="navbar-section right">

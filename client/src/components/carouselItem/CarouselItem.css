@@ -74,3 +74,21 @@
   display: flex;
   justify-content: right;
 }
+
+@media (max-width: 820px) {
+  .carousel-card {
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto 1rem auto;
+    padding: 0.5rem 0;
+    box-sizing: border-box;
+  }
+
+  .hotel-card {
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto 1rem auto;
+    padding: 0.5rem 0;
+    box-sizing: border-box;
+  }
+}

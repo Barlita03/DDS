@@ -1,5 +1,5 @@
 import "./CarouselItem.css";
-// import { Link } from "react-router-dom";
+import { Link } from "react-router";
 
 export default function CarouselItem({ hotel }) {
   return (
@@ -17,9 +17,9 @@ export default function CarouselItem({ hotel }) {
           </div>
           <div className="ver-detalles-container">
             <span className="ver-detalles">
-              {/* <Link to={`/hotels/${hotel.id}`} className="link-no-style">
+              <Link to={`/hotels/${hotel.id}`} className="link-no-style">
                 Ver Detalles
-              </Link> */}
+              </Link>
             </span>
           </div>
         </div>

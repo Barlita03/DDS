@@ -1,0 +1,38 @@
+.sidebar {
+  background-color: var(--primary-purple);
+  height: 100%;
+  max-width: 20rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: var(--primary-white);
+}
+
+.title {
+  display: flex;
+  direction: row;
+  justify-content: space-around;
+  align-items: center;
+  text-align: center;
+  width: 100%;
+  font-size: 2rem;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+  padding: 1rem;
+}
+
+.sidebar ul {
+  list-style: none;
+  width: 100%;
+  padding: 0;
+}
+
+.sidebar li {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.close-icon {
+  cursor: pointer;
+}
